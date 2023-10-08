@@ -46,8 +46,8 @@ export const Chat=(props)=>{
     <div className="messages">{messages.map((message)=>
     <div className="message" key={message.id}>
     
-    <span className="user">{message.user}</span>
-    {message.text}
+    <span className="user">{message.user}:</span>
+   <span style={{fontSize:"13px"}}> {message.text}</span>
     
 
 
