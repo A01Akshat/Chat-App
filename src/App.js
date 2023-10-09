@@ -39,13 +39,17 @@ return(
   {room?<div><Chat room={room}/></div>:<div >
   <label className="room-name">Enter room name:</label>
   <br/>
+  <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
   <input ref={roominput} className="input" placeholder="Room name:"/>  {/*used ref to preevent changing of other things like what happens when we use event.target.value...we dont want want real time changes but changes when button is clicked */}
+  </div>
+
   <br/>
+  <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
   <button onClick={()=>setroom(roominput.current.value)} className="enter-btn">Enter chat:</button>
-  
+  </div>
   </div>}
 
-  <div >
+  <div style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"22.5rem"}}>
     <button onClick={signout} className="sign-out">Sign Out</button>
   </div>
 

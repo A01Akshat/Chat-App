@@ -12,18 +12,12 @@
 .input
 {
   /* margin-top: 9rem; */
-  
+
   border-radius: 5px;
   border:2px solid black;
-  margin-left: 54rem; 
-  display:flex;
-  justify-content: center;
-  align-items: center;
   padding:5px 5px 5px 5px;
 }
-.enter-btn{
-  margin-left: 55rem;
-}
+
 .sign-out
 {
   color: red;

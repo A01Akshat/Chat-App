@@ -9,7 +9,7 @@ const [showMediaIcons,setshowMediaIcons]=useState(false);
         <>
             <nav className="main-nav">
                 <div className="logo ">
-                    <h2 style={{marginLeft:"",display:"flex",flexDirection:"row"}}>Chat App</h2>
+                    <h2 style={{marginLeft:"1.5rem",display:"flex",flexDirection:"row"}}>Chat App</h2>
                 </div>
                 {/* <div className= {showMediaIcons?"menu-link mobile-menu-link":"menu-link"}>
                     <ul>
