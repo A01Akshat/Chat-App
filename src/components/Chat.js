@@ -1,68 +1,72 @@
-import { useEffect, useState } from "react";
-import {addDoc, collection,onSnapshot,serverTimestamp,query,where, orderBy} from 'firebase/firestore';
-import { auth,db } from "../firebase-config";
+import React, { useEffect, useState } from "react";
+import { addDoc, collection, onSnapshot, serverTimestamp, query, where, orderBy } from 'firebase/firestore';
+import { auth, db } from "../firebase-config";
 import '../styles/Chat.css';
-export const Chat=(props)=>{
-    const{room}=props;
+import { Link } from "react-router-dom";
 
-    const [newmessage,setnewmessage]=useState("");
-    const [messages,setmessages]=useState([]);
+export const Chat = ({ room }) => {
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
-    const messageRef=collection(db,"messages");
-    useEffect(()=>{
-        const querymsg=query(messageRef,where("room","==",room),orderBy("createdAt"));
-        const unsuscribe=onSnapshot(querymsg,(snapshot)=>{
-            let messages=[];
-        snapshot.forEach((doc)=>{
-        messages.push({...doc.data(),id:doc.id});
-        });
-        setmessages(messages);
-        });
-        return ()=>unsuscribe(); //to clean up the use effect
-    },[]);
+  const messageRef = collection(db, "messages");
 
-   const handlesubmit=async(e)=>{
-    e.preventDefault();
-    if(newmessage==="")return;
-
-    await addDoc(messageRef,{
-        text:newmessage,
-        createdAt:serverTimestamp(),
-        user:auth.currentUser.displayName,
-        room,
+  useEffect(() => {
+    const queryMsg = query(messageRef, where("room", "==", room), orderBy("createdAt"));
+    const unsubscribe = onSnapshot(queryMsg, (snapshot) => {
+      let messages = [];
+      snapshot.forEach((doc) => {
+        messages.push({ ...doc.data(), id: doc.id });
+      });
+      setMessages(messages);
     });
-    setnewmessage("");
+    return () => unsubscribe();
+  }, [room]);
 
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (newMessage === "") return;
 
+    if (auth.currentUser) {
+      await addDoc(messageRef, {
+        text: newMessage,
+        createdAt: serverTimestamp(),
+        user: auth.currentUser.displayName,
+        room,
+      });
+      setNewMessage("");
+    } else {
+      alert("Please Sign in");
+      console.error("User not authenticated");
+    }
+  };
 
-
-    return (
+  return (
     <div className="chat-app">
-    <div className="header"><h1>
-        Welcome to: {room}
-    </h1></div>
+      <div className="header">
+        <h1>Welcome to: {room}</h1>
+      </div>
 
-    <div className="messages">{messages.map((message)=>
-    <div className="message" key={message.id}>
-    
-    <span className="user">{message.user}:</span>
-   <span style={{fontSize:"13px"}}> {message.text}</span>
-    
+      <div className="messages">
+        {messages.map((message) => (
+          <div className="message" key={message.id}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span className="user">{message.user}:</span>
+              <span>{new Date().toLocaleString()}</span>
+            </div>
+            <span style={{ fontSize: "13px" }}>{message.text}</span>
+          </div>
+        ))}
+      </div>
 
-
-    </div>
-    )}</div>
-
-    <form onSubmit={handlesubmit} className="new-message-form">
-        <input className="new-message-input" placeholder="Type your message..."
-        onChange={(e)=>setnewmessage(e.target.value)}
-        value={newmessage}
+      <form onSubmit={handleSubmit} className="new-message-form">
+        <input 
+          className="new-message-input" 
+          placeholder="Type your message..."
+          onChange={(e) => setNewMessage(e.target.value)}
+          value={newMessage}
         />  
         <button type="submit" className="send-button">Send</button>
-
-
-    </form>    
+      </form>
     </div>
-    )
-}
+  );
+};
